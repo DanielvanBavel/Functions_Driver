@@ -12,7 +12,9 @@ namespace Functions_Driver
                 settings.Max.String = 10;
             });
 
-            return deviceName.Trim();
+            deviceName = deviceName.Replace(" ", "");
+
+            return deviceName;
         }
 
         public static int GenerateTemperature()
