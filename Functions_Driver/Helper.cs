@@ -6,13 +6,13 @@ namespace Functions_Driver
     {
         public static string GenerateDevicename()
         {
-            string deviceNameId = RandomTypeGenerator.Generate<string>(settings =>
+            string deviceName = RandomTypeGenerator.Generate<string>(settings =>
             {
                 settings.Min.String = 5;
                 settings.Max.String = 10;
             });
 
-            return deviceNameId;
+            return deviceName.Trim();
         }
 
         public static int GenerateTemperature()
@@ -28,6 +28,7 @@ namespace Functions_Driver
 
         public static int GetSensorId()
         {
+
             return 17;
         }
     }
