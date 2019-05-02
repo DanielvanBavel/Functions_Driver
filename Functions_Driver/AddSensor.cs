@@ -28,7 +28,7 @@ namespace Functions_Driver
 
                 var json = JsonConvert.SerializeObject(new Sensor()
                 {
-                    DeviceName = "Device-03",
+                    DeviceName = "Device-"+ Helper.GenerateDevicename(),
                     DeviceModel = "KramlerBVF",
                     LocationName = "Amsterdam",
                     IsOnline = true
