@@ -15,8 +15,6 @@ namespace Functions_Driver
         [FunctionName("Main")]
         public static async Task Run([TimerTrigger("0 */5 * * * *")]TimerInfo myTimer, ILogger log)
         {
-
-
             var baseUrl = Environment.GetEnvironmentVariable("FunctionBaseApi");
             var sensorCall = Environment.GetEnvironmentVariable("FunctionCallSensor");
             var MeasurementCall = Environment.GetEnvironmentVariable("FunctionCallMeasurement");
