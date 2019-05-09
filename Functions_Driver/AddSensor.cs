@@ -34,15 +34,12 @@ namespace Functions_Driver
                     IsOnline = true
                 });
 
-                HttpRequestMessage msg = new HttpRequestMessage(new HttpMethod("POST"), Environment.GetEnvironmentVariable("LiveUri"));
-
                 try
                 {
                     var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
                     var response = await httpClient.PostAsync(Environment.GetEnvironmentVariable("LiveUri"), stringContent);
 
-                    result = response.ToString();
-                    req.CreateResponse(HttpStatusCode.OK, response);
+                   req.CreateResponse(HttpStatusCode.OK, response.ToString());
                 }
                 catch (HttpRequestException ex)
                 {

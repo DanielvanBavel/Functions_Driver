@@ -3,6 +3,7 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -34,17 +35,21 @@ namespace Functions_Driver
                     MeasureTime = DateTime.Now.ToString("HH:mm")
                 });
 
-                HttpRequestMessage msg = new HttpRequestMessage(new HttpMethod("POST"), Environment.GetEnvironmentVariable("LiveUri"));
-
                 try
                 {
-                    var id = Helper.GetSensorId();
+                    List<int> sensorIdList = await Helper.getListOfSensorIds();
 
-                    var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
-                    var response = await httpClient.PostAsync(Environment.GetEnvironmentVariable("LiveUri") + id + "/measurement", stringContent);
+                    if(sensorIdList.Count != 0)
+                    {
+                        foreach (int id in sensorIdList)
+                        {
+                            var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+                            var response = await httpClient.PostAsync(Environment.GetEnvironmentVariable("LiveUri") + id + "/measurement", stringContent);
 
-                    result = response.ToString();
-                    req.CreateResponse(HttpStatusCode.OK, response);
+                            result = response.ToString();
+                            req.CreateResponse(HttpStatusCode.OK, response);
+                        }
+                    }                                           
                 }
                 catch (HttpRequestException ex)
                 {

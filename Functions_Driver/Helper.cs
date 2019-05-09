@@ -1,4 +1,10 @@
-﻿using RandomType;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using RandomType;
+using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Functions_Driver
 {
@@ -28,10 +34,26 @@ namespace Functions_Driver
             return randomTemp;
         }
 
-        public static int GetSensorId()
+        public static async Task<List<int>> getListOfSensorIds()
         {
+            HttpResponseMessage response = new HttpResponseMessage();
+            List<int> sensorIds = new List<int>();
 
-            return 17;
+            using (HttpClient client = new HttpClient())
+            {
+                response = await client.GetAsync(Environment.GetEnvironmentVariable("LiveUri"));
+
+                var result = response.Content.ReadAsStringAsync().Result;
+                JArray items = (JArray)JsonConvert.DeserializeObject(result);
+
+                foreach (var item in items)
+                {
+                    var tempId = item["temperatureSensorId"];
+                    int id = Int32.Parse(tempId.ToString());
+                    sensorIds.Add(id);
+                }
+            }
+            return sensorIds;
         }
     }
 }
