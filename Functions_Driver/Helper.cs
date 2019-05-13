@@ -10,12 +10,16 @@ namespace Functions_Driver
 {
     public static class Helper
     {
+        /// <summary>
+        /// Generates a extra string part for the device name to be more unique.
+        /// </summary>
+        /// <returns>Returns random string like: 64hnfcu</returns>
         public static string GenerateDevicename()
         {
             string deviceName = RandomTypeGenerator.Generate<string>(settings =>
             {
                 settings.Min.String = 5;
-                settings.Max.String = 10;
+                settings.Max.String = 20;
             });
 
             deviceName = deviceName.Replace(" ", "");
@@ -23,6 +27,10 @@ namespace Functions_Driver
             return deviceName;
         }
 
+        /// <summary>
+        /// Generates a temperature value as an Integer.
+        /// </summary>
+        /// <returns>random int between -127 and +57</returns>
         public static int GenerateTemperature()
         {
             int randomTemp = RandomTypeGenerator.Generate<int>(settings =>
@@ -34,7 +42,11 @@ namespace Functions_Driver
             return randomTemp;
         }
 
-        public static async Task<List<int>> getListOfSensorIds()
+        /// <summary>
+        /// Calls API root to query all the current Sensor objects
+        /// </summary>
+        /// <returns>List of sensorId's of all sensors</returns>
+        public static async Task<List<int>> GetListOfSensorIds()
         {
             HttpResponseMessage response = new HttpResponseMessage();
             List<int> sensorIds = new List<int>();

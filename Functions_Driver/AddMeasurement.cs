@@ -19,40 +19,52 @@ namespace Functions_Driver
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequestMessage req,
             ILogger log)
         {
+            // log information
             log.LogInformation("Add measurement function called");
 
+            //create emtpy string
             var result = "";
 
+            //create new httpClient instance
             using (HttpClient httpClient = new HttpClient())
             {
+                //Add headers to client to accept json data.
                 httpClient.DefaultRequestHeaders.Accept.Clear();
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                var json = JsonConvert.SerializeObject(new Measurement()
-                {
-                    Temperature = Helper.GenerateTemperature(),
-                    MeasureDate = DateTime.Now.ToString("dd-MM-yyyy"),
-                    MeasureTime = DateTime.Now.ToString("HH:mm")
-                });
-
                 try
                 {
-                    List<int> sensorIdList = await Helper.getListOfSensorIds();
+                    //Get the list of sensor id's by calling the helper function
+                    List<int> sensorIdList = await Helper.GetListOfSensorIds();
 
-                    if(sensorIdList.Count != 0)
+                    //check if the sensorList have some items, otherwise do nothing
+                    //bcz if there are no sensors, measurement cannot be added.
+                    if (sensorIdList.Count != 0)
                     {
+                        // if there are items loop through it.
                         foreach (int id in sensorIdList)
                         {
+                            //create json string from the Measurement object
+                            var json = JsonConvert.SerializeObject(new Measurement()
+                            {
+                                Temperature = Helper.GenerateTemperature(),
+                                MeasureDate = DateTime.Now.ToString("dd-MM-yyyy"),
+                                MeasureTime = DateTime.Now.ToString("HH:mm")
+                            });
+
+                            //Post request to the Rest API
                             var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
                             var response = await httpClient.PostAsync(Environment.GetEnvironmentVariable("LiveUri") + id + "/measurement", stringContent);
 
+                            //give the response
                             result = response.ToString();
-                            req.CreateResponse(HttpStatusCode.OK, response);
+                            req.CreateResponse(HttpStatusCode.OK, result);
                         }
                     }                                           
                 }
                 catch (HttpRequestException ex)
                 {
+                    //catch the exception
                     req.CreateResponse(HttpStatusCode.BadRequest, ex);
                 }
             }
