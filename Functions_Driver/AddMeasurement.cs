@@ -16,8 +16,7 @@ namespace Functions_Driver
     {
         [FunctionName("AddMeasurement")]
         public static async Task<string> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequestMessage req,
-            ILogger log)
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequestMessage req, ILogger log)
         {
             // log information
             log.LogInformation("Add measurement function called");
